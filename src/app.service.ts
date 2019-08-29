@@ -47,8 +47,12 @@ export const properties = generate<IProperty>(10, propertyIndex => {
     title: faker.lorem.sentence(),
     price: faker.finance.amount(),
     address: faker.address.streetAddress(),
-    params,
     images,
+    params,
+    geo: {
+      lat: parseFloat(faker.address.latitude()),
+      lng: parseFloat(faker.address.longitude()),
+    },
   };
 });
 
@@ -77,6 +81,10 @@ export interface IProperty {
   price: string;
   images: IPropertyImage[];
   params: IPropertyParam[];
+  geo: {
+    lat: number;
+    lng: number;
+  };
 }
 
 @Injectable()
