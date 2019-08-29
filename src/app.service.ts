@@ -52,6 +52,11 @@ export const properties = generate<IProperty>(10, propertyIndex => {
   };
 });
 
+export interface IApiResponse<T = any> {
+  data?: T;
+  error?: string;
+}
+
 export interface IPropertyImage {
   id: string;
   src: string;
@@ -76,11 +81,11 @@ export interface IProperty {
 
 @Injectable()
 export class AppService {
-  getProperties(): IProperty[] {
-    return properties;
+  getProperties(): IApiResponse<IProperty[] | undefined> {
+    return { data: properties };
   }
 
-  getProperty(id: string): IProperty | undefined {
-    return getById(id, properties);
+  getProperty(id: string): IApiResponse<IProperty | undefined> {
+    return { data: getById(id, properties) };
   }
 }
