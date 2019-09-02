@@ -28,3 +28,14 @@ export interface IProperty {
     lng: number;
   };
 }
+
+export interface IUser {
+  userId: number;
+  username: string;
+  password: string;
+}
+
+export interface IRequestLogin {
+  username: string;
+  password: string;
+}
