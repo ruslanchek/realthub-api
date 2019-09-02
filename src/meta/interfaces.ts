@@ -35,7 +35,7 @@ export interface IUser {
   password: string;
 }
 
-export interface IRequestLogin {
+export interface ILoginDto {
   username: string;
   password: string;
 }

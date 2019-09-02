@@ -1,28 +1,25 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { PropertiesModule } from './properties/properties.module';
+import { PropertyModule } from './property/property.module';
 
 @Module({
-  controllers: [AppController],
-  providers: [AppService],
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'root',
-      database: 'test',
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST || '',
+      port: parseInt(process.env.POSTGRES_PORT || '', 10),
+      username: process.env.POSTGRES_USERNAME || '',
+      password: process.env.POSTGRES_PASSWORD || '',
+      database: process.env.POSTGRES_DATABASE || '',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      ssl: true,
     }),
     AuthModule,
     UsersModule,
-    PropertiesModule,
+    PropertyModule,
   ],
 })
 export class AppModule {}

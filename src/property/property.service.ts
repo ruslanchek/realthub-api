@@ -5,7 +5,7 @@ import {
   IPropertyImage,
   IPropertyParam,
   IApiResponse,
-} from 'meta/interfaces';
+} from '../meta/interfaces';
 
 function times(repeatNumber: number, callback: (index: number) => void): void {
   for (let i = 0; i < repeatNumber; i += 1) {
@@ -63,7 +63,7 @@ export const properties = generate<IProperty>(10, propertyIndex => {
 });
 
 @Injectable()
-export class AppService {
+export class PropertyService {
   getProperties(): IApiResponse<IProperty[] | undefined> {
     return { data: properties };
   }
