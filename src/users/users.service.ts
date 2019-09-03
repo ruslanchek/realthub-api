@@ -6,26 +6,25 @@ export class UsersService {
   private readonly users: IUser[];
 
   constructor() {
-    this.users = [
-      {
-        id: '1',
-        username: 'john',
-        password: 'changeme',
-      },
-      {
-        id: '2',
-        username: 'chris',
-        password: 'secret',
-      },
-      {
-        id: '3',
-        username: 'maria',
-        password: 'guess',
-      },
-    ];
+    this.users = [];
   }
 
   async findOne(username: string): Promise<IUser | undefined> {
     return this.users.find(user => user.username === username);
+  }
+
+  async add(
+    username: string,
+    passwordHash: string,
+  ): Promise<IUser | undefined> {
+    const user = {
+      id: Math.random().toString(),
+      username,
+      passwordHash,
+    };
+
+    this.users.push(user);
+
+    return user;
   }
 }

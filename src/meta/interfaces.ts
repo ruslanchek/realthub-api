@@ -32,5 +32,5 @@ export interface IProperty {
 export interface IUser {
   id: string;
   username: string;
-  password: string;
+  passwordHash: string;
 }
