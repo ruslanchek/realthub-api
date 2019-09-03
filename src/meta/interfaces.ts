@@ -34,8 +34,3 @@ export interface IUser {
   username: string;
   password: string;
 }
-
-export interface ILoginDto {
-  username: string;
-  password: string;
-}
