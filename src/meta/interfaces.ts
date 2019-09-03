@@ -30,7 +30,7 @@ export interface IProperty {
 }
 
 export interface IUser {
-  userId: number;
+  id: string;
   username: string;
   password: string;
 }

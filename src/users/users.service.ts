@@ -8,17 +8,17 @@ export class UsersService {
   constructor() {
     this.users = [
       {
-        userId: 1,
+        id: '1',
         username: 'john',
         password: 'changeme',
       },
       {
-        userId: 2,
+        id: '2',
         username: 'chris',
         password: 'secret',
       },
       {
-        userId: 3,
+        id: '3',
         username: 'maria',
         password: 'guess',
       },
