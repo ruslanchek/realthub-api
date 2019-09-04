@@ -1,30 +1,60 @@
-import { Injectable } from '@nestjs/common';
-import { IUser } from '../meta/interfaces';
+import {
+  Injectable,
+  ConflictException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../entries/user.entity';
 
 @Injectable()
 export class UsersService {
-  private readonly users: IUser[];
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-  constructor() {
-    this.users = [];
+  async findByEmail(email: string): Promise<User | undefined> {
+    const [users, count] = await this.userRepository.findAndCount({
+      email,
+    });
+
+    return count ? users[0] : undefined;
   }
 
-  async findOne(username: string): Promise<IUser | undefined> {
-    return this.users.find(user => user.username === username);
+  async findById(id: string): Promise<User | undefined> {
+    return await this.userRepository.findOne(id);
   }
 
-  async add(
-    username: string,
-    passwordHash: string,
-  ): Promise<IUser | undefined> {
-    const user = {
-      id: Math.random().toString(),
-      username,
-      passwordHash,
-    };
+  async update(id: string, userData: Partial<User>): Promise<User | undefined> {
+    const foundUser = await this.findById(id);
 
-    this.users.push(user);
+    if (foundUser) {
+      await this.userRepository.update(id, userData);
+      return await this.userRepository.findOne(id);
+    } else {
+      throw new NotFoundException();
+    }
+  }
 
-    return user;
+  async add(email: string, passwordHash: string): Promise<User | undefined> {
+    const foundUser = await this.findByEmail(email);
+
+    if (foundUser) {
+      throw new ConflictException('EMAIL_CONFLICT', '1');
+    } else {
+      const result = await this.userRepository.insert({
+        email,
+        passwordHash,
+      });
+
+      if (result.identifiers.length > 0) {
+        const { id } = result.identifiers[0];
+        return await this.userRepository.findOne(id);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 }

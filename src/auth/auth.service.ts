@@ -1,14 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IJwtSignPayload } from './jwt.strategy';
 import { IRegisterRequestDto, ILoginResultDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
-
-export interface IAuthValudateResult {
-  userId: string;
-  username: string;
-}
 
 @Injectable()
 export class AuthService {
@@ -18,15 +13,14 @@ export class AuthService {
   ) {}
 
   async validateUser(
-    username: string,
+    email: string,
     password: string,
-  ): Promise<IAuthValudateResult | undefined> {
-    const user = await this.usersService.findOne(username);
+  ): Promise<IJwtSignPayload | undefined> {
+    const user = await this.usersService.findByEmail(email);
 
     if (user && bcrypt.compareSync(password, user.passwordHash)) {
       return {
         userId: user.id,
-        username: user.username,
       };
     }
 
@@ -37,23 +31,20 @@ export class AuthService {
     dto: IRegisterRequestDto,
   ): Promise<ILoginResultDto | undefined> {
     const passwordHash = bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10));
-
-    const user = await this.usersService.add(dto.username, passwordHash);
+    const user = await this.usersService.add(dto.email, passwordHash);
 
     if (user) {
       return this.signUser({
         userId: user.id,
-        username: user.username,
       });
+    } else {
+      throw new BadRequestException();
     }
-
-    return undefined;
   }
 
-  signUser(user: IAuthValudateResult): ILoginResultDto {
+  signUser(user: IJwtSignPayload): ILoginResultDto {
     const payload: IJwtSignPayload = {
-      username: user.username,
-      sub: user.userId,
+      userId: user.userId,
     };
 
     return {

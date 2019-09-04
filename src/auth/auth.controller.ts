@@ -9,10 +9,19 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { IRegisterRequestDto } from './auth.dto';
+import { IJwtSignPayload } from './jwt.strategy';
+import { UsersService } from '../users/users.service';
+
+interface IRequest {
+  user: IJwtSignPayload;
+}
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Post('register')
   async register(@Body() dto: IRegisterRequestDto) {
@@ -21,13 +30,13 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req: any) {
+  async login(@Request() req: IRequest) {
     return this.authService.signUser(req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
-  getProfile(@Request() req: any) {
-    return req.user;
+  async getProfile(@Request() req: IRequest) {
+    return await this.userService.findById(req.user.userId);
   }
 }

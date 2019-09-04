@@ -28,9 +28,3 @@ export interface IProperty {
     lng: number;
   };
 }
-
-export interface IUser {
-  id: string;
-  username: string;
-  passwordHash: string;
-}
