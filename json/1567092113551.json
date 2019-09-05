@@ -1,0 +1,267 @@
+{
+  "success": true,
+  "codes": {},
+  "properties": [
+    {
+      "metadata": {
+        "property_id": 67701622,
+        "published_at": null,
+        "updated_at": "2018-10-05",
+        "upi": "US-08031-N-0221447002000-R-N",
+        "release_version": "v57.3"
+      },
+      "addresses": [
+        {
+          "street_number": "3832",
+          "street_pre_direction": null,
+          "street_name": "Jason",
+          "street_suffix": "St",
+          "street_post_direction": "NE",
+          "unit_number": null,
+          "formatted_street_address": "3832 Jason St NE",
+          "city": "Denver",
+          "state": "CO",
+          "zip_code": "80211",
+          "zip_code_plus_four": "2601"
+        }
+      ],
+      "geocoding": {
+        "street": { "latitude": null, "longitude": null },
+        "parcel_centroid": { "latitude": null, "longitude": null },
+        "rooftop": { "latitude": 39.77, "longitude": -104.99908 }
+      },
+      "parcel": {
+        "depth": null,
+        "width": null,
+        "size": 6250,
+        "acres": 0.1435,
+        "range": "68W",
+        "township": "03S",
+        "section": "21",
+        "block": "46",
+        "lot": "6",
+        "location_description": null,
+        "building_count": null,
+        "boundaries": { "srid": 4326, "wkt": null, "geojson": null }
+      },
+      "land_use": {
+        "classification_code": "R-SFR",
+        "category": "Residential",
+        "subcategory": "Single Family Residence",
+        "source_code": null,
+        "zoning": "I-MX-3"
+      },
+      "structures": [
+        {
+          "year_built": 1929,
+          "effective_year_built": null,
+          "identifier": null,
+          "rooms_count": 5,
+          "beds_count": 2,
+          "baths_count": 1,
+          "half_baths_count": null,
+          "full_baths_count": 1,
+          "quarter_baths_count": null,
+          "three_quarter_baths_count": null,
+          "stories_count": 1,
+          "units_count": 1,
+          "total_size": 899,
+          "finished_size": 899,
+          "unfinished_size": null,
+          "basement_size": 658,
+          "garage_size": 546,
+          "height": null,
+          "architecture_type": "Other",
+          "exterior_wall_type": "Stucco",
+          "air_conditioning_type": null,
+          "basement_type": null,
+          "building_type": "Single Family Residence",
+          "category": "Single Family",
+          "condition": null,
+          "construction_type": null,
+          "fireplace_count": null,
+          "fireplace_type": null,
+          "foundation_type": null,
+          "flooring_type": null,
+          "garage_type": "Garage: Detached",
+          "heating_type": "Forced Air",
+          "mobile_home": null,
+          "parking_spaces": null,
+          "parking_type": "Garage: Detached",
+          "pool_type": null,
+          "quality": null,
+          "roof_type": null,
+          "roof_style_type": null,
+          "electricity_type": null,
+          "fuel_type": null,
+          "sewer_type": null,
+          "water_type": null,
+          "is_primary": true
+        }
+      ],
+      "structure_totals": {
+        "beds": null,
+        "baths": null,
+        "rooms": null,
+        "units": null,
+        "sqft": null,
+        "count": null
+      },
+      "owners": [
+        {
+          "corporate_flag": true,
+          "name": "ONQU REALTY INC",
+          "address": "3832 Jason St",
+          "address2": null,
+          "city": "Denver",
+          "state": "CO",
+          "zip_code": "80211",
+          "first_name": null,
+          "middle_name": null,
+          "last_name": null,
+          "suffix": null,
+          "ended_at": null,
+          "started_at": "2018-08-20"
+        }
+      ],
+      "assessments": [
+        {
+          "land": 6754,
+          "improvement": 12706,
+          "total": 19460,
+          "exemptions": null,
+          "tax_amount": 945,
+          "tax_year": 2017,
+          "details": null,
+          "outstanding_tax": null,
+          "appraised_total": null,
+          "appraised_land": null,
+          "appraised_improvement": null
+        }
+      ],
+      "sales": [
+        {
+          "date": "2018-08-20",
+          "recording_date": "2018-08-20",
+          "price": 395000,
+          "type": null,
+          "seller": null,
+          "buyer": null,
+          "transaction_id": "795195820",
+          "document_year": 2018,
+          "sale_code": null,
+          "multi_apn": null,
+          "hpi_adjusted_price_2010": 230256,
+          "deed_book": null,
+          "deed_page": null
+        }
+      ],
+      "mortgages": [
+        {
+          "amount": 316000,
+          "loan_type": "Building Or Construction",
+          "deed_type": null,
+          "date": "2018-08-20",
+          "term": 144,
+          "due_date": null,
+          "lender_name": null,
+          "details": null
+        }
+      ],
+      "legal": {
+        "apn_original": "221447002000",
+        "apn_unformatted": "0221447002000",
+        "tax_account": null,
+        "legal_description": "L 6 & 7 BLK 46 VIADUCT ADD",
+        "type": null,
+        "planned_urban_development": null
+      },
+      "valuation": {
+        "value": 395000,
+        "low": null,
+        "high": null,
+        "suggested_rental": null,
+        "confidence": null,
+        "market_value_change_year": null,
+        "market_value_change_quarter": null,
+        "forecast_1_year": 415290
+      },
+      "status": {
+        "absentee_owner": false,
+        "vacant": null,
+        "market_status": "recently_sold",
+        "listing_price": null,
+        "rental_price": null
+      },
+      "postal": {
+        "carrier_code": null,
+        "delivery_point_code": null,
+        "delivery_point_check_digit": null,
+        "validated": false,
+        "deliverable": null,
+        "details": null
+      },
+      "geographies": {
+        "county": {
+          "name": "Denver",
+          "state_fips_code": "08",
+          "fips_code": "031"
+        },
+        "census": { "census_tract": 1101, "census_block": null },
+        "cbsa": { "name": null, "code": null, "type": null },
+        "school_elementary": {
+          "geoid": "807230",
+          "name": "Westminster School District 50",
+          "low_grade": "PK",
+          "high_grade": "12",
+          "type": "Unified"
+        },
+        "school_secondary": {
+          "geoid": "807230",
+          "name": "Westminster School District 50",
+          "low_grade": "PK",
+          "high_grade": "12",
+          "type": "Unified"
+        },
+        "congressional": "",
+        "state_legislative_upper": { "name": "State Senate District 34" },
+        "state_legislative_lower": { "name": "State House District 5" },
+        "police": {
+          "name": "Denver Police Department",
+          "type": "City",
+          "city": "Denver",
+          "state_fips": "08",
+          "county_fips": null
+        },
+        "fire": {
+          "fdid": "1601",
+          "name": "Denver Fire Department",
+          "address": "745 W Colfax AVE",
+          "address_2": null,
+          "city": "Denver",
+          "zip_code": "80204",
+          "phone": "720-913-3473",
+          "mailing_address": "745 W Colfax AVE, Denver, CO, 80204",
+          "department_type": "Career",
+          "organization_type": "Local",
+          "website": "http://www.denvergov.org/Default.aspx?alias=www.denvergov.org/FireDepartment",
+          "stations_count": 33,
+          "career_firefighters_count": 914,
+          "volunteer_firefighters_count": 0,
+          "paid_per_call_firefighters_count": 0,
+          "non_firefighting_staff_count": 0,
+          "interpolated_latitude": null,
+          "interpolated_longitude": null,
+          "county": "Denver",
+          "state": "Colorado"
+        },
+        "flood": {
+          "fima_flood_zone": null,
+          "annual_flood_risk": null,
+          "firm_panel_id": null
+        },
+        "neighborhood": null
+      }
+    }
+  ]
+}
