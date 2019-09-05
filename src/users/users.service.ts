@@ -15,16 +15,32 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async findByEmail(email: string): Promise<User | undefined> {
-    const [users, count] = await this.userRepository.findAndCount({
-      email,
+  async findByEmail(
+    email: string,
+    fields?: Array<keyof User>,
+  ): Promise<User | undefined> {
+    const users = await this.userRepository.find({
+      where: {
+        email,
+      },
+      select: fields ? fields : undefined,
     });
 
-    return count ? users[0] : undefined;
+    return users.length > 0 ? users[0] : undefined;
   }
 
-  async findById(id: string): Promise<User | undefined> {
-    return await this.userRepository.findOne(id);
+  async findById(
+    id: string,
+    fields?: Array<keyof User>,
+  ): Promise<User | undefined> {
+    const users = await this.userRepository.find({
+      where: {
+        id,
+      },
+      select: fields ? fields : undefined,
+    });
+
+    return users.length > 0 ? users[0] : undefined;
   }
 
   async update(id: string, userData: Partial<User>): Promise<User | undefined> {

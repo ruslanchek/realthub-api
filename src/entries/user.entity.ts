@@ -10,4 +10,13 @@ export class User {
 
   @Column({ type: 'text', select: false })
   passwordHash!: string;
+
+  @Column({ type: 'date', select: false, default: 'now()' })
+  passwordChangedDate!: Date;
+
+  @Column({ type: 'date', select: false, default: 'now()', nullable: true })
+  passwordResetExpires!: Date;
+
+  @Column({ type: 'text', select: false, nullable: true })
+  passwordResetCode!: string;
 }

@@ -1,9 +1,14 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IJwtSignPayload } from './jwt.strategy';
 import { IRegisterRequestDto, ILoginResultDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
+import { authConstants } from '../constants';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +21,10 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<IJwtSignPayload | undefined> {
-    const user = await this.usersService.findByEmail(email);
+    const user = await this.usersService.findByEmail(email, [
+      'email',
+      'passwordHash',
+    ]);
 
     if (user && bcrypt.compareSync(password, user.passwordHash)) {
       return {
@@ -50,5 +58,25 @@ export class AuthService {
     return {
       token: this.jwtService.sign(payload),
     };
+  }
+
+  async requestPasswordReset(email: string) {
+    const passwordResetCode = bcrypt.hashSync(
+      `${Date.now().toString()}${email}`,
+      bcrypt.genSaltSync(10),
+    );
+
+    const user = await this.usersService.findByEmail(email);
+
+    if (user) {
+      await this.usersService.update(user.id, {
+        passwordResetCode,
+        passwordResetExpires: new Date(
+          Date.now() + authConstants.passwordResetExpires,
+        ),
+      });
+    } else {
+      throw new NotFoundException();
+    }
   }
 }
