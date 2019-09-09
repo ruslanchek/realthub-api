@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { PropertyModule } from './property/property.module';
 
 @Module({
@@ -18,7 +18,7 @@ import { PropertyModule } from './property/property.module';
       ssl: process.env.POSTGRES_SSL === '1' ? true : false,
     }),
     AuthModule,
-    UsersModule,
+    UserModule,
     PropertyModule,
   ],
 })

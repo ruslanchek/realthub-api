@@ -8,9 +8,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { IRegisterRequestDto } from './auth.dto';
+import { IRegisterRequestDto, IPasswordResetDto } from './auth.dto';
 import { IJwtSignPayload } from './jwt.strategy';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 
 interface IRequest {
   user: IJwtSignPayload;
@@ -20,12 +20,17 @@ interface IRequest {
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UsersService,
+    private readonly userService: UserService,
   ) {}
 
   @Post('register')
   async register(@Body() dto: IRegisterRequestDto) {
     return this.authService.register(dto);
+  }
+
+  @Post('password-reset')
+  async passwordReset(@Body() dto: IPasswordResetDto) {
+    return this.authService.requestPasswordReset(dto.email);
   }
 
   @UseGuards(AuthGuard('local'))

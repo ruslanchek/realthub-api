@@ -3,17 +3,21 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { IJwtSignPayload } from './jwt.strategy';
-import { IRegisterRequestDto, ILoginResultDto } from './auth.dto';
+import { IRegisterRequestDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { authConstants } from '../constants';
+
+export interface ILoginResult {
+  token: string;
+}
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -35,9 +39,7 @@ export class AuthService {
     return undefined;
   }
 
-  async register(
-    dto: IRegisterRequestDto,
-  ): Promise<ILoginResultDto | undefined> {
+  async register(dto: IRegisterRequestDto): Promise<ILoginResult | undefined> {
     const passwordHash = bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10));
     const user = await this.usersService.add(dto.email, passwordHash);
 
@@ -50,7 +52,7 @@ export class AuthService {
     }
   }
 
-  signUser(user: IJwtSignPayload): ILoginResultDto {
+  signUser(user: IJwtSignPayload): ILoginResult {
     const payload: IJwtSignPayload = {
       userId: user.userId,
     };
