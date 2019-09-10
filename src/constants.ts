@@ -4,5 +4,6 @@ export const jwtConstants = {
 };
 
 export const authConstants = {
-  passwordResetExpires: 1000 * 60 * 5,
+  passwordResetExpires: 1000 * 60 * 10,
+  passwordResetInterval: 1000 * 60 * 5,
 };

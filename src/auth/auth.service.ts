@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  MethodNotAllowedException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -9,6 +10,8 @@ import { IJwtSignPayload } from './jwt.strategy';
 import { IRegisterRequestDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { authConstants } from '../constants';
+import { differenceInMilliseconds } from 'date-fns';
+import { getValidatorMessage, EMessageType } from '../messages';
 
 export interface ILoginResult {
   token: string;
@@ -68,13 +71,25 @@ export class AuthService {
       bcrypt.genSaltSync(10),
     );
 
-    const user = await this.usersService.findByEmail(email);
+    const user = await this.usersService.findByEmail(email, [
+      'id',
+      'email',
+      'passwordResetInterval',
+    ]);
 
     if (user) {
+      if (
+        differenceInMilliseconds(user.passwordResetInterval, new Date()) > 0
+      ) {
+        throw new MethodNotAllowedException(
+          getValidatorMessage(EMessageType.PasswordResetInterval),
+        );
+      }
+
       await this.usersService.update(user.id, {
         passwordResetCode,
-        passwordResetExpires: new Date(
-          Date.now() + authConstants.passwordResetExpires,
+        passwordResetInterval: new Date(
+          Date.now() + authConstants.passwordResetInterval,
         ),
       });
     } else {

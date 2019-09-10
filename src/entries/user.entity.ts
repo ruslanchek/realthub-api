@@ -11,7 +11,12 @@ export class User {
   @Column({ type: 'text', select: false })
   passwordHash!: string;
 
-  @Column({ type: 'timestamp', select: false, default: 'now()' })
+  @Column({
+    type: 'timestamp',
+    select: false,
+    default: 'now()',
+    nullable: true,
+  })
   passwordChangedDate!: Date;
 
   @Column({
@@ -21,6 +26,14 @@ export class User {
     nullable: true,
   })
   passwordResetExpires!: Date;
+
+  @Column({
+    type: 'timestamp',
+    select: false,
+    default: 'now()',
+    nullable: true,
+  })
+  passwordResetInterval!: Date;
 
   @Column({ type: 'text', select: false, nullable: true })
   passwordResetCode!: string;

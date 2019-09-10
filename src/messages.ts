@@ -3,6 +3,7 @@ export enum EMessageType {
   IsUserAlreadyExists,
   PasswordMinLength,
   PasswordMaxLength,
+  PasswordResetInterval,
 }
 
 const MESSAGES_MAP: { [key: number]: string } = {
@@ -10,6 +11,7 @@ const MESSAGES_MAP: { [key: number]: string } = {
   [EMessageType.IsUserAlreadyExists]: 'USER_EXISTS',
   [EMessageType.PasswordMinLength]: 'PASSWORD_MIN_LENGTH',
   [EMessageType.PasswordMaxLength]: 'PASSWORD_MAX_LENGTH',
+  [EMessageType.PasswordResetInterval]: 'PASSWORD_RESET_INTERVAL',
 };
 
 export function getValidatorMessage(
