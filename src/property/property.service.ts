@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as faker from 'faker';
-import {
-  IProperty,
-  IPropertyImage,
-  IPropertyParam,
-  IApiResponse,
-} from '../meta/interfaces';
+import { IProperty, IPropertyImage, IPropertyParam } from '../meta/interfaces';
 
 function times(repeatNumber: number, callback: (index: number) => void): void {
   for (let i = 0; i < repeatNumber; i += 1) {
@@ -64,11 +59,11 @@ export const properties = generate<IProperty>(10, propertyIndex => {
 
 @Injectable()
 export class PropertyService {
-  getProperties(): IApiResponse<IProperty[] | undefined> {
+  getProperties() {
     return { data: properties };
   }
 
-  getProperty(id: string): IApiResponse<IProperty | undefined> {
+  getProperty(id: string) {
     return { data: getById(id, properties) };
   }
 }

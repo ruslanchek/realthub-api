@@ -1,9 +1,7 @@
-
-    <!doctype html>
+export const transactional = `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
       <head>
         <title>
-          
         </title>
         <!--[if !mso]><!-- -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,16 +39,12 @@
           .outlook-group-fix { width:100% !important; }
         </style>
         <![endif]-->
-        
       <!--[if !mso]><!-->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700" rel="stylesheet" type="text/css">
         <style type="text/css">
           @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700);
         </style>
       <!--<![endif]-->
-
-
-
     <style type="text/css">
       @media only screen and (min-width:480px) {
         .mj-column-per-100 { width:100% !important; }
@@ -568,4 +562,4 @@
     
       </body>
     </html>
-  
+  `;
