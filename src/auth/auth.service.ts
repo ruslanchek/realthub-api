@@ -82,6 +82,7 @@ export class AuthService {
         differenceInMilliseconds(user.passwordResetInterval, new Date()) > 0
       ) {
         throw new MethodNotAllowedException(
+          undefined,
           getValidatorMessage(EMessageType.PasswordResetInterval),
         );
       }
@@ -92,6 +93,12 @@ export class AuthService {
           Date.now() + authConstants.passwordResetInterval,
         ),
       });
+
+      return {
+        data: {
+          passwordResetCode,
+        },
+      };
     } else {
       throw new NotFoundException();
     }

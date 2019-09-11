@@ -1,6 +1,5 @@
 import {
   Injectable,
-  ConflictException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
@@ -58,7 +57,7 @@ export class UserService {
     const foundUser = await this.findByEmail(email);
 
     if (foundUser) {
-      throw new ConflictException('EMAIL_CONFLICT', '1');
+      return undefined;
     } else {
       const result = await this.userRepository.insert({
         email,
