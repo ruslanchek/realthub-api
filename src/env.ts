@@ -14,5 +14,4 @@ export const JWT_SECRET = process.env.JWT_SECRET;
 export const BASE_URL = process.env.BASE_URL;
 
 // Mail
-export const SPARKPOST_API_KEY = process.env.SPARKPOST_API_KEY;
-export const SPARKPOST_API_ENDPOINT = process.env.SPARKPOST_API_ENDPOINT;
+export const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;

@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { authConstants } from '../constants';
 import { differenceInMilliseconds } from 'date-fns';
 import { getValidatorMessage, EMessageType } from '../messages';
+import { EmailService } from '../email/email.service';
 
 export interface ILoginResult {
   token: string;
@@ -22,6 +23,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async validateUser(
@@ -44,9 +46,24 @@ export class AuthService {
 
   async register(dto: IRegisterRequestDto): Promise<ILoginResult | undefined> {
     const passwordHash = bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10));
-    const user = await this.usersService.add(dto.email, passwordHash);
+    const emailConfirmationCode = bcrypt.hashSync(
+      `${dto.email}${Date.now()}`,
+      bcrypt.genSaltSync(10),
+    );
+    const user = await this.usersService.add(
+      dto.email,
+      passwordHash,
+      emailConfirmationCode,
+    );
 
     if (user) {
+      await this.emailService.sendWelcome({
+        emailConfirmationCode,
+        userName: user.email,
+        userEmail: user.email,
+        userId: user.id,
+      });
+
       return this.signUser({
         userId: user.id,
       });
@@ -67,7 +84,7 @@ export class AuthService {
 
   async requestPasswordReset(email: string) {
     const passwordResetCode = bcrypt.hashSync(
-      `${Date.now().toString()}${email}`,
+      `${Date.now()}${email}`,
       bcrypt.genSaltSync(10),
     );
 

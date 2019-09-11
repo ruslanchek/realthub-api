@@ -37,4 +37,7 @@ export class User {
 
   @Column({ type: 'text', select: false, nullable: true })
   passwordResetCode!: string;
+
+  @Column({ type: 'text', select: false, nullable: true })
+  emailConfirmationCode!: string;
 }

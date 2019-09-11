@@ -53,7 +53,11 @@ export class UserService {
     }
   }
 
-  async add(email: string, passwordHash: string): Promise<User | undefined> {
+  async add(
+    email: string,
+    passwordHash: string,
+    emailConfirmationCode: string,
+  ): Promise<User | undefined> {
     const foundUser = await this.findByEmail(email);
 
     if (foundUser) {
@@ -62,6 +66,7 @@ export class UserService {
       const result = await this.userRepository.insert({
         email,
         passwordHash,
+        emailConfirmationCode,
       });
 
       if (result.identifiers.length > 0) {

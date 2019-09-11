@@ -36,7 +36,7 @@
     "mustache": "^3.0.3",
     "mysql": "^2.17.1",
     "nodemailer": "^5.1.1",
-    "nodemailer-sparkpost-transport": "^2.2.0",
+    "nodemailer-sendgrid-transport": "^0.2.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

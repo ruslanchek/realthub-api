@@ -1,10 +1,10 @@
 // @ts-ignore
-import * as sparkPostTransport from 'nodemailer-sparkpost-transport';
+import * as sgTransport from 'nodemailer-sendgrid-transport';
 import { Injectable } from '@nestjs/common';
 import { transactional } from './templates/transactional';
 import * as nodemailer from 'nodemailer';
 import * as Mustache from 'mustache';
-import { SPARKPOST_API_KEY, SPARKPOST_API_ENDPOINT } from 'src/env';
+import { SENDGRID_API_KEY } from '../env';
 import {
   IEmailData,
   IEmailDataForNotification,
@@ -31,45 +31,44 @@ export class EmailService {
   }
 
   constructor() {
-    console.log(templates.transactional);
-
     this.transport = nodemailer.createTransport(
-      sparkPostTransport({
-        sparkPostApiKey: SPARKPOST_API_KEY,
-        endpoint: SPARKPOST_API_ENDPOINT,
+      sgTransport({
+        auth: {
+          api_key: SENDGRID_API_KEY,
+        },
       }),
     );
   }
 
   private createMailOptions(data: IEmailData): MailOptions {
     const dataLocal = {
-      siteUrl: `https://xsnapp.com?from=email`,
-      linkUnderLogoUrl: `https://xsnapp.com?from=email`,
-      linkUnderLogoText: `xsnapp.com`,
+      siteUrl: `https://realthub.com?from=email`,
+      linkUnderLogoUrl: `https://realthub.com?from=email`,
+      linkUnderLogoText: `realthub.com`,
       pre: data.pre,
       title: data.title,
       body: data.body,
       buttonText: data.buttonText,
-      post: `If you received this email by mistake, simply delete it. You won't be subscribed if you don't click the confirmation link above.`,
-      buttonUrl: `https://xsnapp.com`,
-      copyright: `Copyright © 2018–${new Date().getFullYear()} Xsnapp All rights reserved.`,
+      post: `If you received this email by mistake, simply delete it.`,
+      buttonUrl: `https://realthub.com`,
+      copyright: `Copyright © 2018–${new Date().getFullYear()} Realthub All rights reserved.`,
       nav: [
         {
           title: `Contacts`,
-          url: `https://xsnapp.com/about/contacts?from=email`,
+          url: `https://realthub.com/about/contacts?from=email`,
         },
         {
           title: `Advertise`,
-          url: `https://xsnapp.com/about/advertise?from=email`,
+          url: `https://realthub.com/about/advertise?from=email`,
         },
-        { title: `Terms`, url: `https://xsnapp.com/about/terms?from=email` },
+        { title: `Terms`, url: `https://realthub.com/about/terms?from=email` },
         {
           title: `Privacy`,
-          url: `https://xsnapp.com/about/privacy?from=email`,
+          url: `https://realthub.com/about/privacy?from=email`,
         },
       ],
       unsubscribeLinkText: `Unsubscribe`,
-      unsubscribeLinkUrl: `https://xsnapp.com/unsubscribe?from=email`,
+      unsubscribeLinkUrl: `https://realthub.com/unsubscribe?from=email`,
       ...data,
     };
 
@@ -104,14 +103,14 @@ export class EmailService {
   public async sendWelcome(data: IEmailDataForAuth): Promise<boolean> {
     const dataProcessed: IEmailData = {
       to: data.userEmail,
-      subject: `Welcome to Xsnapp`,
+      subject: `Welcome to Realthub`,
       userName: data.userName,
       pre: `Hi ${data.userName},`,
       title: `Registration almost complete...`,
       body: `Thank you for your registration! Please confirm your email to verify your account.`,
       buttonText: `Verify email`,
-      buttonUrl: `https://xsnapp.com/verification/email/${
-        data.emailConfirmationToken
+      buttonUrl: `https://realthub.com/verification/email/${
+        data.emailConfirmationCode
       }`,
     };
 
@@ -127,7 +126,7 @@ export class EmailService {
       title: `Your email address confirmed`,
       body: `Congratulations, you have successfully confirmed your email!`,
       buttonText: `Explore`,
-      buttonUrl: `https://xsnapp.com`,
+      buttonUrl: `https://realthub.com`,
     };
 
     return await this.send(this.createMailOptions(dataProcessed));
@@ -142,7 +141,7 @@ export class EmailService {
       title: `Your password has changed`,
       body: `Congratulations, you have successfully changed your password!`,
       buttonText: `Welcome back`,
-      buttonUrl: `https://xsnapp.com`,
+      buttonUrl: `https://realthub.com`,
     };
 
     return await this.send(this.createMailOptions(dataProcessed));
@@ -159,8 +158,8 @@ export class EmailService {
       title: `You just requested password reset`,
       body: `Follow the link below to set new password`,
       buttonText: `Set new password`,
-      buttonUrl: `https://xsnapp.com/auth/password-reset-confirm/?token=${
-        data.passwordResetToken
+      buttonUrl: `https://realthub.com/auth/password-reset-confirm/?token=${
+        data.passwordResetCode
       }`,
     };
 

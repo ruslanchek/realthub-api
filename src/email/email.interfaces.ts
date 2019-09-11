@@ -12,7 +12,7 @@ export interface IEmailData {
 export interface IEmailDataFor {
   userName: string;
   userEmail: string;
-  userId: number;
+  userId: string;
 }
 
 export interface IEmailDataForNotification extends IEmailDataFor {
@@ -24,9 +24,9 @@ export interface IEmailDataForNotification extends IEmailDataFor {
 }
 
 export interface IEmailDataForAuth extends IEmailDataFor {
-  emailConfirmationToken: string;
+  emailConfirmationCode: string;
 }
 
 export interface IEmailDataForPasswordReset extends IEmailDataFor {
-  passwordResetToken: string;
+  passwordResetCode: string;
 }
