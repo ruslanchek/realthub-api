@@ -7,7 +7,7 @@ import {
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { IJwtSignPayload } from './jwt.strategy';
-import { IRegisterRequestDto } from './auth.dto';
+import { IRegisterRequestDto, IConfirmEmailDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { authConstants } from '../constants';
 import { differenceInMilliseconds } from 'date-fns';
@@ -15,7 +15,21 @@ import { getValidatorMessage, EMessageType } from '../messages';
 import { EmailService } from '../email/email.service';
 
 export interface ILoginResult {
-  token: string;
+  data: {
+    token: string;
+  };
+}
+
+export interface IConfirmEmailResult {
+  data: {
+    success: boolean;
+  };
+}
+
+export interface IRequestPasswordResetResult {
+  data: {
+    success: boolean;
+  };
 }
 
 @Injectable()
@@ -44,6 +58,32 @@ export class AuthService {
     return undefined;
   }
 
+  async confirmEmail(
+    dto: IConfirmEmailDto,
+  ): Promise<IConfirmEmailResult | undefined> {
+    const user = await this.usersService.findByWhere(
+      {
+        emailConfirmationCode: dto.code,
+      },
+      ['id'],
+    );
+
+    if (user) {
+      await this.usersService.update(user.id, {
+        isEmailConfirmed: true,
+        emailConfirmationCode: undefined,
+      });
+
+      return {
+        data: {
+          success: true,
+        },
+      };
+    }
+
+    throw new NotFoundException(getValidatorMessage(EMessageType.IsEmail));
+  }
+
   async register(dto: IRegisterRequestDto): Promise<ILoginResult | undefined> {
     const passwordHash = bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10));
     const emailConfirmationCode = bcrypt.hashSync(
@@ -67,9 +107,11 @@ export class AuthService {
       return this.signUser({
         userId: user.id,
       });
-    } else {
-      throw new BadRequestException();
     }
+
+    throw new BadRequestException(
+      getValidatorMessage(EMessageType.ServerError),
+    );
   }
 
   signUser(user: IJwtSignPayload): ILoginResult {
@@ -78,11 +120,15 @@ export class AuthService {
     };
 
     return {
-      token: this.jwtService.sign(payload),
+      data: {
+        token: this.jwtService.sign(payload),
+      },
     };
   }
 
-  async requestPasswordReset(email: string) {
+  async requestPasswordReset(
+    email: string,
+  ): Promise<IRequestPasswordResetResult | undefined> {
     const passwordResetCode = bcrypt.hashSync(
       `${Date.now()}${email}`,
       bcrypt.genSaltSync(10),
@@ -113,11 +159,11 @@ export class AuthService {
 
       return {
         data: {
-          passwordResetCode,
+          success: true,
         },
       };
-    } else {
-      throw new NotFoundException();
     }
+
+    throw new NotFoundException();
   }
 }

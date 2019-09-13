@@ -42,6 +42,23 @@ export class UserService {
     return users.length > 0 ? users[0] : undefined;
   }
 
+  async findByWhere(
+    where: Partial<User>,
+    fields?: Array<keyof User>,
+  ): Promise<User | undefined> {
+    const users = await this.userRepository.find({
+      where,
+      select: fields ? fields : undefined,
+      take: 1,
+    });
+
+    if (users.length > 0) {
+      return users[0];
+    } else {
+      return undefined;
+    }
+  }
+
   async update(id: string, userData: Partial<User>): Promise<User | undefined> {
     const foundUser = await this.findById(id);
 

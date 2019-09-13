@@ -8,7 +8,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { IRegisterRequestDto, IPasswordResetDto } from './auth.dto';
+import {
+  IRegisterRequestDto,
+  IPasswordResetDto,
+  IConfirmEmailDto,
+} from './auth.dto';
 import { IJwtSignPayload } from './jwt.strategy';
 import { UserService } from '../user/user.service';
 
@@ -26,6 +30,11 @@ export class AuthController {
   @Post('register')
   async register(@Body() dto: IRegisterRequestDto) {
     return this.authService.register(dto);
+  }
+
+  @Post('confirm-email')
+  async confirmEmail(@Body() dto: IConfirmEmailDto) {
+    return this.authService.confirmEmail(dto);
   }
 
   @Post('password-reset')

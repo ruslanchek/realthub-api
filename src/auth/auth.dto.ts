@@ -20,6 +20,10 @@ export class IRegisterRequestDto {
   password!: string;
 }
 
+export class IConfirmEmailDto {
+  code!: string;
+}
+
 export class IPasswordResetDto {
   @IsEmail(undefined, {
     message: getValidatorMessage(EMessageType.IsEmail),

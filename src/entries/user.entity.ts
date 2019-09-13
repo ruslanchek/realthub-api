@@ -40,4 +40,7 @@ export class User {
 
   @Column({ type: 'text', select: false, nullable: true })
   emailConfirmationCode!: string;
+
+  @Column({ type: 'boolean', select: false, default: false })
+  isEmailConfirmed!: boolean;
 }

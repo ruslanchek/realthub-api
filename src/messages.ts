@@ -4,6 +4,8 @@ export enum EMessageType {
   PasswordMinLength,
   PasswordMaxLength,
   PasswordResetInterval,
+  EmailConfirmationCodeNotFound,
+  ServerError,
 }
 
 const MESSAGES_MAP: { [key: number]: string } = {
@@ -12,6 +14,8 @@ const MESSAGES_MAP: { [key: number]: string } = {
   [EMessageType.PasswordMinLength]: 'PASSWORD_MIN_LENGTH',
   [EMessageType.PasswordMaxLength]: 'PASSWORD_MAX_LENGTH',
   [EMessageType.PasswordResetInterval]: 'PASSWORD_RESET_INTERVAL',
+  [EMessageType.EmailConfirmationCodeNotFound]: 'INVALID_CODE',
+  [EMessageType.ServerError]: 'SERVER_ERROR',
 };
 
 export function getValidatorMessage(
