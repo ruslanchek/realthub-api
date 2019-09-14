@@ -82,13 +82,19 @@ export class AuthService {
       {
         emailConfirmationCode: dto.code,
       },
-      ['id'],
+      ['id', 'email'],
     );
 
     if (user) {
       await this.usersService.update(user.id, {
         isEmailConfirmed: true,
         emailConfirmationCode: undefined,
+      });
+
+      await this.emailService.sendEmailConfirmed({
+        userName: user.email,
+        userEmail: user.email,
+        userId: user.id,
       });
 
       return {
