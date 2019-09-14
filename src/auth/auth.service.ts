@@ -137,11 +137,13 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email, [
       'id',
       'email',
-      'passwordResetExpires',
+      'passwordResetInterval',
     ]);
 
     if (user) {
-      if (differenceInMilliseconds(user.passwordResetExpires, new Date()) > 0) {
+      if (
+        differenceInMilliseconds(user.passwordResetInterval, new Date()) > 0
+      ) {
         throw new MethodNotAllowedException(
           undefined,
           getValidatorMessage(EMessageType.PasswordResetInterval),
@@ -150,8 +152,8 @@ export class AuthService {
 
       await this.usersService.update(user.id, {
         passwordResetCode,
-        passwordResetExpires: new Date(
-          Date.now() + authConstants.passwordResetExpires,
+        passwordResetInterval: new Date(
+          Date.now() + authConstants.passwordResetInterval,
         ),
       });
 

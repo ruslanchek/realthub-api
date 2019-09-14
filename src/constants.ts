@@ -15,8 +15,11 @@ export const jwtConstants = {
 };
 
 export const authConstants = {
-  passwordResetExpires: 1000 * 60 * 10,
-  passwordResetInterval: 1000 * 60 * 5,
+  // Password reset code will expire after that time
+  passwordResetExpires: 1000 * 60 * 0.1,
+
+  // User can request reset code again after that time
+  passwordResetInterval: 1000 * 60 * 0.1,
 };
 
 export const typeOrmConstants: TypeOrmModuleOptions = {
