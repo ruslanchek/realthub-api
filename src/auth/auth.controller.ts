@@ -8,9 +8,14 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { IRegisterRequestDto } from './auth.dto';
+import {
+  IRegisterRequestDto,
+  IPasswordResetRequestDto,
+  IConfirmEmailDto,
+  IPasswordResetConfirmDto,
+} from './auth.dto';
 import { IJwtSignPayload } from './jwt.strategy';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 
 interface IRequest {
   user: IJwtSignPayload;
@@ -20,7 +25,7 @@ interface IRequest {
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UsersService,
+    private readonly userService: UserService,
   ) {}
 
   @Post('register')
@@ -28,15 +33,36 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @UseGuards(AuthGuard('local'))
-  @Post('login')
-  async login(@Request() req: IRequest) {
-    return this.authService.signUser(req.user);
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  async validateEmailRequest(@Request() req: IRequest) {
+    return await this.userService.findById(req.user.userId);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('me')
+  @Get('validate-email/request')
   async getProfile(@Request() req: IRequest) {
-    return await this.userService.findById(req.user.userId);
+    return await this.authService.validateEmailRequest(req.user);
+  }
+
+  @Post('validate-email/confirm')
+  async validateEmailConfirm(@Body() dto: IConfirmEmailDto) {
+    return await this.authService.validateEmailConfirm(dto);
+  }
+
+  @Post('password-reset/request')
+  async passwordResetRequest(@Body() dto: IPasswordResetRequestDto) {
+    return await this.authService.passwordResetRequest(dto);
+  }
+
+  @Post('password-reset/confirm')
+  async passwordReset(@Body() dto: IPasswordResetConfirmDto) {
+    return await this.authService.passwordResetConfirm(dto);
+  }
+
+  @UseGuards(AuthGuard('local'))
+  @Post('login')
+  login(@Request() req: IRequest) {
+    return this.authService.signUser(req.user);
   }
 }

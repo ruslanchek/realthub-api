@@ -1,8 +1,3 @@
-export interface IApiResponse<T = any> {
-  data?: T;
-  error?: string;
-}
-
 export interface IPropertyImage {
   id: string;
   src: string;

@@ -1,6 +1,5 @@
 import {
   Injectable,
-  ConflictException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,7 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from '../entries/user.entity';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -43,6 +42,23 @@ export class UsersService {
     return users.length > 0 ? users[0] : undefined;
   }
 
+  async findByWhere(
+    where: Partial<User>,
+    fields?: Array<keyof User>,
+  ): Promise<User | undefined> {
+    const users = await this.userRepository.find({
+      where,
+      select: fields ? fields : undefined,
+      take: 1,
+    });
+
+    if (users.length > 0) {
+      return users[0];
+    } else {
+      return undefined;
+    }
+  }
+
   async update(id: string, userData: Partial<User>): Promise<User | undefined> {
     const foundUser = await this.findById(id);
 
@@ -54,15 +70,20 @@ export class UsersService {
     }
   }
 
-  async add(email: string, passwordHash: string): Promise<User | undefined> {
+  async add(
+    email: string,
+    passwordHash: string,
+    emailConfirmationCode: string,
+  ): Promise<User | undefined> {
     const foundUser = await this.findByEmail(email);
 
     if (foundUser) {
-      throw new ConflictException('EMAIL_CONFLICT', '1');
+      return undefined;
     } else {
       const result = await this.userRepository.insert({
         email,
         passwordHash,
+        emailConfirmationCode,
       });
 
       if (result.identifiers.length > 0) {
