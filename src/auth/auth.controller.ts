@@ -33,30 +33,36 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @Post('confirm-email')
-  async confirmEmail(@Body() dto: IConfirmEmailDto) {
-    return this.authService.confirmEmail(dto);
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  async validateEmailRequest(@Request() req: IRequest) {
+    return await this.userService.findById(req.user.userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('validate-email/request')
+  async getProfile(@Request() req: IRequest) {
+    return await this.authService.validateEmailRequest(req.user);
+  }
+
+  @Post('validate-email/confirm')
+  async validateEmailConfirm(@Body() dto: IConfirmEmailDto) {
+    return await this.authService.validateEmailConfirm(dto);
   }
 
   @Post('password-reset/request')
   async passwordResetRequest(@Body() dto: IPasswordResetRequestDto) {
-    return this.authService.passwordResetRequest(dto);
+    return await this.authService.passwordResetRequest(dto);
   }
 
   @Post('password-reset/confirm')
   async passwordReset(@Body() dto: IPasswordResetConfirmDto) {
-    return this.authService.passwordResetConfirm(dto);
+    return await this.authService.passwordResetConfirm(dto);
   }
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req: IRequest) {
+  login(@Request() req: IRequest) {
     return this.authService.signUser(req.user);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('me')
-  async getProfile(@Request() req: IRequest) {
-    return await this.userService.findById(req.user.userId);
   }
 }

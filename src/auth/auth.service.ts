@@ -25,6 +25,12 @@ export interface ILoginResult {
   };
 }
 
+export interface IValidateEmailRequest {
+  data: {
+    success: boolean;
+  };
+}
+
 export interface IConfirmEmailResult {
   data: {
     success: boolean;
@@ -69,7 +75,7 @@ export class AuthService {
     return undefined;
   }
 
-  async confirmEmail(
+  async validateEmailConfirm(
     dto: IConfirmEmailDto,
   ): Promise<IConfirmEmailResult | undefined> {
     const user = await this.usersService.findByWhere(
@@ -93,6 +99,39 @@ export class AuthService {
     }
 
     throw new NotFoundException(getValidatorMessage(EMessageType.WrongCode));
+  }
+
+  async validateEmailRequest(
+    signPayload: IJwtSignPayload,
+  ): Promise<IValidateEmailRequest | undefined> {
+    const { userId } = signPayload;
+    const emailConfirmationCode = bcrypt.hashSync(
+      `${userId}${Date.now()}`,
+      bcrypt.genSaltSync(10),
+    );
+
+    const user = await this.usersService.update(userId, {
+      emailConfirmationCode,
+    });
+
+    if (user) {
+      await this.emailService.sendWelcome({
+        emailConfirmationCode,
+        userName: user.email,
+        userEmail: user.email,
+        userId: user.id,
+      });
+
+      return {
+        data: {
+          success: true,
+        },
+      };
+    }
+
+    throw new BadRequestException(
+      getValidatorMessage(EMessageType.ServerError),
+    );
   }
 
   async register(dto: IRegisterRequestDto): Promise<ILoginResult | undefined> {
@@ -125,9 +164,10 @@ export class AuthService {
     );
   }
 
-  signUser(user: IJwtSignPayload): ILoginResult {
+  signUser(signPayload: IJwtSignPayload): ILoginResult {
+    const { userId } = signPayload;
     const payload: IJwtSignPayload = {
-      userId: user.userId,
+      userId,
     };
 
     return {
