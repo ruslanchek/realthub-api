@@ -10,8 +10,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import {
   IRegisterRequestDto,
-  IPasswordResetDto,
+  IPasswordResetRequestDto,
   IConfirmEmailDto,
+  IPasswordResetConfirmDto,
 } from './auth.dto';
 import { IJwtSignPayload } from './jwt.strategy';
 import { UserService } from '../user/user.service';
@@ -37,9 +38,14 @@ export class AuthController {
     return this.authService.confirmEmail(dto);
   }
 
-  @Post('password-reset')
-  async passwordReset(@Body() dto: IPasswordResetDto) {
-    return this.authService.requestPasswordReset(dto.email);
+  @Post('password-reset/request')
+  async passwordResetRequest(@Body() dto: IPasswordResetRequestDto) {
+    return this.authService.passwordResetRequest(dto);
+  }
+
+  @Post('password-reset/confirm')
+  async passwordReset(@Body() dto: IPasswordResetConfirmDto) {
+    return this.authService.passwordResetConfirm(dto);
   }
 
   @UseGuards(AuthGuard('local'))

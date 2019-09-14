@@ -7,7 +7,12 @@ import {
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { IJwtSignPayload } from './jwt.strategy';
-import { IRegisterRequestDto, IConfirmEmailDto } from './auth.dto';
+import {
+  IRegisterRequestDto,
+  IConfirmEmailDto,
+  IPasswordResetRequestDto,
+  IPasswordResetConfirmDto,
+} from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { authConstants } from '../constants';
 import { differenceInMilliseconds } from 'date-fns';
@@ -26,9 +31,15 @@ export interface IConfirmEmailResult {
   };
 }
 
-export interface IRequestPasswordResetResult {
+export interface IRequestPasswordResetRequestResult {
   data: {
     success: boolean;
+  };
+}
+
+export interface IRequestPasswordResetConfirmResult {
+  data: {
+    token: string;
   };
 }
 
@@ -126,15 +137,52 @@ export class AuthService {
     };
   }
 
-  async requestPasswordReset(
-    email: string,
-  ): Promise<IRequestPasswordResetResult | undefined> {
+  async passwordResetConfirm(
+    dto: IPasswordResetConfirmDto,
+  ): Promise<IRequestPasswordResetConfirmResult | undefined> {
+    const user = await this.usersService.findByWhere(
+      {
+        passwordResetCode: dto.code,
+      },
+      ['id', 'passwordResetCodeExpires'],
+    );
+
+    if (
+      user &&
+      differenceInMilliseconds(user.passwordResetCodeExpires, new Date()) > 0
+    ) {
+      const passwordHash = bcrypt.hashSync(
+        dto.password,
+        bcrypt.genSaltSync(10),
+      );
+
+      await this.usersService.update(user.id, {
+        passwordHash,
+        passwordResetCode: undefined,
+        passwordResetCodeExpires: undefined,
+        passwordResetInterval: undefined,
+        passwordChangedDate: new Date(),
+      });
+
+      return {
+        data: {
+          token: passwordHash,
+        },
+      };
+    }
+
+    throw new BadRequestException(getValidatorMessage(EMessageType.WrongCode));
+  }
+
+  async passwordResetRequest(
+    dto: IPasswordResetRequestDto,
+  ): Promise<IRequestPasswordResetRequestResult | undefined> {
     const passwordResetCode = bcrypt.hashSync(
-      `${Date.now()}${email}`,
+      `${Date.now()}${dto.email}`,
       bcrypt.genSaltSync(10),
     );
 
-    const user = await this.usersService.findByEmail(email, [
+    const user = await this.usersService.findByEmail(dto.email, [
       'id',
       'email',
       'passwordResetInterval',
@@ -155,6 +203,16 @@ export class AuthService {
         passwordResetInterval: new Date(
           Date.now() + authConstants.passwordResetInterval,
         ),
+        passwordResetCodeExpires: new Date(
+          Date.now() + authConstants.passwordResetExpires,
+        ),
+      });
+
+      await this.emailService.sendPasswordReset({
+        passwordResetCode,
+        userName: user.email,
+        userEmail: user.email,
+        userId: user.id,
       });
 
       return {

@@ -25,7 +25,7 @@ export class User {
     default: 'now()',
     nullable: true,
   })
-  passwordResetExpires!: Date;
+  passwordResetCodeExpires!: Date;
 
   @Column({
     type: 'timestamp',

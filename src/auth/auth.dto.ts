@@ -33,9 +33,24 @@ export class IConfirmEmailDto {
   code!: string;
 }
 
-export class IPasswordResetDto {
+export class IPasswordResetRequestDto {
   @IsEmail(undefined, {
     message: getValidatorMessage(EMessageType.IsEmail),
   })
   email!: string;
+}
+
+export class IPasswordResetConfirmDto {
+  @MinLength(6, {
+    message: getValidatorMessage(EMessageType.PasswordMinLength),
+  })
+  @MaxLength(32, {
+    message: getValidatorMessage(EMessageType.PasswordMaxLength),
+  })
+  password!: string;
+
+  @IsString({
+    message: getValidatorMessage(EMessageType.WrongCode),
+  })
+  code!: string;
 }
