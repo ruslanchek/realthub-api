@@ -81,7 +81,7 @@ export class AuthService {
       };
     }
 
-    throw new NotFoundException(getValidatorMessage(EMessageType.IsEmail));
+    throw new NotFoundException(getValidatorMessage(EMessageType.WrongCode));
   }
 
   async register(dto: IRegisterRequestDto): Promise<ILoginResult | undefined> {
@@ -137,13 +137,11 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email, [
       'id',
       'email',
-      'passwordResetInterval',
+      'passwordResetExpires',
     ]);
 
     if (user) {
-      if (
-        differenceInMilliseconds(user.passwordResetInterval, new Date()) > 0
-      ) {
+      if (differenceInMilliseconds(user.passwordResetExpires, new Date()) > 0) {
         throw new MethodNotAllowedException(
           undefined,
           getValidatorMessage(EMessageType.PasswordResetInterval),
@@ -152,8 +150,8 @@ export class AuthService {
 
       await this.usersService.update(user.id, {
         passwordResetCode,
-        passwordResetInterval: new Date(
-          Date.now() + authConstants.passwordResetInterval,
+        passwordResetExpires: new Date(
+          Date.now() + authConstants.passwordResetExpires,
         ),
       });
 

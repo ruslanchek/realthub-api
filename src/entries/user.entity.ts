@@ -27,14 +27,6 @@ export class User {
   })
   passwordResetExpires!: Date;
 
-  @Column({
-    type: 'timestamp',
-    select: false,
-    default: 'now()',
-    nullable: true,
-  })
-  passwordResetInterval!: Date;
-
   @Column({ type: 'text', select: false, nullable: true })
   passwordResetCode!: string;
 

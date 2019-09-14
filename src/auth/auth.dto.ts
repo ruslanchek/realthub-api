@@ -1,4 +1,10 @@
-import { IsEmail, Validate, MinLength, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  Validate,
+  MinLength,
+  MaxLength,
+  IsString,
+} from 'class-validator';
 import { IsUserAlreadyExist } from '../user/user.validators';
 import { getValidatorMessage, EMessageType } from '../messages';
 
@@ -21,6 +27,9 @@ export class IRegisterRequestDto {
 }
 
 export class IConfirmEmailDto {
+  @IsString({
+    message: getValidatorMessage(EMessageType.WrongCode),
+  })
   code!: string;
 }
 
