@@ -19,7 +19,7 @@ import { differenceInMilliseconds } from 'date-fns';
 import { getValidatorMessage, EMessageType } from '../messages';
 import { EmailService } from '../email/email.service';
 
-export interface ILoginResult {
+export interface IAuthSuccessResponse {
   token: string;
 }
 
@@ -33,10 +33,6 @@ export interface IConfirmEmailResult {
 
 export interface IRequestPasswordResetRequestResult {
   success: boolean;
-}
-
-export interface IRequestPasswordResetConfirmResult {
-  token: string;
 }
 
 @Injectable()
@@ -126,7 +122,9 @@ export class AuthService {
     );
   }
 
-  async register(dto: IRegisterRequestDto): Promise<ILoginResult | undefined> {
+  async register(
+    dto: IRegisterRequestDto,
+  ): Promise<IAuthSuccessResponse | undefined> {
     const passwordHash = bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10));
     const emailConfirmationCode = bcrypt.hashSync(
       `${dto.email}${Date.now()}`,
@@ -156,7 +154,7 @@ export class AuthService {
     );
   }
 
-  signUser(signPayload: IJwtSignPayload): ILoginResult {
+  signUser(signPayload: IJwtSignPayload): IAuthSuccessResponse {
     const { userId } = signPayload;
     const payload: IJwtSignPayload = {
       userId,
@@ -169,7 +167,7 @@ export class AuthService {
 
   async passwordResetConfirm(
     dto: IPasswordResetConfirmDto,
-  ): Promise<IRequestPasswordResetConfirmResult | undefined> {
+  ): Promise<IAuthSuccessResponse | undefined> {
     const user = await this.usersService.findByWhere(
       {
         passwordResetCode: dto.code,
