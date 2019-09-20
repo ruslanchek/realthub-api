@@ -35,13 +35,13 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
-  async validateEmailRequest(@Request() req: IRequest) {
+  async me(@Request() req: IRequest) {
     return await this.userService.findById(req.user.userId);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('validate-email/request')
-  async getProfile(@Request() req: IRequest) {
+  async validateEmailRequest(@Request() req: IRequest) {
     return await this.authService.validateEmailRequest(req.user);
   }
 
@@ -56,7 +56,7 @@ export class AuthController {
   }
 
   @Post('password-reset/confirm')
-  async passwordReset(@Body() dto: IPasswordResetConfirmDto) {
+  async passwordResetConfirm(@Body() dto: IPasswordResetConfirmDto) {
     return await this.authService.passwordResetConfirm(dto);
   }
 
