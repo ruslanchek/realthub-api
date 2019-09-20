@@ -20,33 +20,23 @@ import { getValidatorMessage, EMessageType } from '../messages';
 import { EmailService } from '../email/email.service';
 
 export interface ILoginResult {
-  data: {
-    token: string;
-  };
+  token: string;
 }
 
 export interface IValidateEmailRequest {
-  data: {
-    success: boolean;
-  };
+  success: boolean;
 }
 
 export interface IConfirmEmailResult {
-  data: {
-    success: boolean;
-  };
+  success: boolean;
 }
 
 export interface IRequestPasswordResetRequestResult {
-  data: {
-    success: boolean;
-  };
+  success: boolean;
 }
 
 export interface IRequestPasswordResetConfirmResult {
-  data: {
-    token: string;
-  };
+  token: string;
 }
 
 @Injectable()
@@ -98,9 +88,7 @@ export class AuthService {
       });
 
       return {
-        data: {
-          success: true,
-        },
+        success: true,
       };
     }
 
@@ -129,9 +117,7 @@ export class AuthService {
       });
 
       return {
-        data: {
-          success: true,
-        },
+        success: true,
       };
     }
 
@@ -177,9 +163,7 @@ export class AuthService {
     };
 
     return {
-      data: {
-        token: this.jwtService.sign(payload),
-      },
+      token: this.jwtService.sign(payload),
     };
   }
 
@@ -211,9 +195,7 @@ export class AuthService {
       });
 
       return {
-        data: {
-          token: passwordHash,
-        },
+        token: passwordHash,
       };
     }
 
@@ -262,9 +244,7 @@ export class AuthService {
       });
 
       return {
-        data: {
-          success: true,
-        },
+        success: true,
       };
     }
 

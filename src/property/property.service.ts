@@ -60,10 +60,10 @@ export const properties = generate<IProperty>(10, propertyIndex => {
 @Injectable()
 export class PropertyService {
   getProperties() {
-    return { data: properties };
+    return properties;
   }
 
   getProperty(id: string) {
-    return { data: getById(id, properties) };
+    return getById(id, properties);
   }
 }
