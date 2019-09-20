@@ -18,22 +18,12 @@ import { authConstants } from '../constants';
 import { differenceInMilliseconds } from 'date-fns';
 import { getValidatorMessage, EMessageType } from '../messages';
 import { EmailService } from '../email/email.service';
-
-export interface IAuthSuccessResponse {
-  token: string;
-}
-
-export interface IValidateEmailRequest {
-  success: boolean;
-}
-
-export interface IConfirmEmailResult {
-  success: boolean;
-}
-
-export interface IRequestPasswordResetRequestResult {
-  success: boolean;
-}
+import {
+  IConfirmEmailResult,
+  IValidateEmailRequest,
+  IAuthSuccessResponse,
+  IRequestPasswordResetRequestResult,
+} from './auth.interfaces';
 
 @Injectable()
 export class AuthService {
@@ -63,7 +53,7 @@ export class AuthService {
 
   async validateEmailConfirm(
     dto: IConfirmEmailDto,
-  ): Promise<IConfirmEmailResult | undefined> {
+  ): Promise<IConfirmEmailResult> {
     const user = await this.usersService.findByWhere(
       {
         emailConfirmationCode: dto.code,
@@ -86,9 +76,9 @@ export class AuthService {
       return {
         success: true,
       };
+    } else {
+      throw new NotFoundException(getValidatorMessage(EMessageType.WrongCode));
     }
-
-    throw new NotFoundException(getValidatorMessage(EMessageType.WrongCode));
   }
 
   async validateEmailRequest(
@@ -115,16 +105,14 @@ export class AuthService {
       return {
         success: true,
       };
+    } else {
+      throw new BadRequestException(
+        getValidatorMessage(EMessageType.ServerError),
+      );
     }
-
-    throw new BadRequestException(
-      getValidatorMessage(EMessageType.ServerError),
-    );
   }
 
-  async register(
-    dto: IRegisterRequestDto,
-  ): Promise<IAuthSuccessResponse | undefined> {
+  async register(dto: IRegisterRequestDto): Promise<IAuthSuccessResponse> {
     const passwordHash = bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10));
     const emailConfirmationCode = bcrypt.hashSync(
       `${dto.email}${Date.now()}`,
@@ -147,11 +135,11 @@ export class AuthService {
       return this.signUser({
         userId: user.id,
       });
+    } else {
+      throw new BadRequestException(
+        getValidatorMessage(EMessageType.ServerError),
+      );
     }
-
-    throw new BadRequestException(
-      getValidatorMessage(EMessageType.ServerError),
-    );
   }
 
   signUser(signPayload: IJwtSignPayload): IAuthSuccessResponse {
@@ -167,7 +155,7 @@ export class AuthService {
 
   async passwordResetConfirm(
     dto: IPasswordResetConfirmDto,
-  ): Promise<IAuthSuccessResponse | undefined> {
+  ): Promise<IAuthSuccessResponse> {
     const user = await this.usersService.findByWhere(
       {
         passwordResetCode: dto.code,
@@ -195,9 +183,11 @@ export class AuthService {
       return {
         token: passwordHash,
       };
+    } else {
+      throw new BadRequestException(
+        getValidatorMessage(EMessageType.WrongCode),
+      );
     }
-
-    throw new BadRequestException(getValidatorMessage(EMessageType.WrongCode));
   }
 
   async passwordResetRequest(
@@ -244,8 +234,8 @@ export class AuthService {
       return {
         success: true,
       };
+    } else {
+      throw new NotFoundException();
     }
-
-    throw new NotFoundException();
   }
 }

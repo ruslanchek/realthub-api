@@ -5,6 +5,7 @@ import {
   Get,
   Request,
   Body,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -14,12 +15,8 @@ import {
   IConfirmEmailDto,
   IPasswordResetConfirmDto,
 } from './auth.dto';
-import { IJwtSignPayload } from './jwt.strategy';
 import { UserService } from '../user/user.service';
-
-interface IRequest {
-  user: IJwtSignPayload;
-}
+import { IApiRequest } from 'src/interfaces/common';
 
 @Controller('auth')
 export class AuthController {
@@ -30,19 +27,27 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() dto: IRegisterRequestDto) {
-    return this.authService.register(dto);
+    return await this.authService.register(dto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
-  async me(@Request() req: IRequest) {
-    return await this.userService.findById(req.user.userId);
+  async me(@Request() req: IApiRequest) {
+    if (req.user) {
+      return await this.userService.findById(req.user.userId);
+    } else {
+      throw new BadRequestException();
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('validate-email/request')
-  async validateEmailRequest(@Request() req: IRequest) {
-    return await this.authService.validateEmailRequest(req.user);
+  async validateEmailRequest(@Request() req: IApiRequest) {
+    if (req.user) {
+      return await this.authService.validateEmailRequest(req.user);
+    } else {
+      throw new BadRequestException();
+    }
   }
 
   @Post('validate-email/confirm')
@@ -62,7 +67,11 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Request() req: IRequest) {
-    return this.authService.signUser(req.user);
+  login(@Request() req: IApiRequest) {
+    if (req.user) {
+      return this.authService.signUser(req.user);
+    } else {
+      throw new BadRequestException();
+    }
   }
 }

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as faker from 'faker';
-import { IProperty, IPropertyImage, IPropertyParam } from '../meta/interfaces';
+import {
+  IProperty,
+  IPropertyImage,
+  IPropertyParam,
+} from '../interfaces/common';
 
 function times(repeatNumber: number, callback: (index: number) => void): void {
   for (let i = 0; i < repeatNumber; i += 1) {
@@ -25,7 +29,7 @@ function getById<T = any>(id: string, array: T[]): T | undefined {
   return array.find(item => (item as any).id === id);
 }
 
-export const properties = generate<IProperty>(10, propertyIndex => {
+const properties = generate<IProperty>(10, propertyIndex => {
   const images = generate<IPropertyImage>(5, imageIndex => {
     return {
       id: faker.random.uuid(),
@@ -60,10 +64,14 @@ export const properties = generate<IProperty>(10, propertyIndex => {
 @Injectable()
 export class PropertyService {
   getProperties() {
-    return properties;
+    return {
+      data: properties,
+    };
   }
 
   getProperty(id: string) {
-    return getById(id, properties);
+    return {
+      data: getById(id, properties),
+    };
   }
 }
