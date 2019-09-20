@@ -24,6 +24,7 @@ import {
   IAuthSuccessResponse,
   IRequestPasswordResetRequestResult,
 } from './auth.interfaces';
+import { IApiResponse } from 'src/interfaces/common';
 
 @Injectable()
 export class AuthService {
@@ -53,7 +54,7 @@ export class AuthService {
 
   async validateEmailConfirm(
     dto: IConfirmEmailDto,
-  ): Promise<IConfirmEmailResult> {
+  ): Promise<IApiResponse<IConfirmEmailResult>> {
     const user = await this.usersService.findByWhere(
       {
         emailConfirmationCode: dto.code,
@@ -74,7 +75,9 @@ export class AuthService {
       });
 
       return {
-        success: true,
+        data: {
+          success: true,
+        },
       };
     } else {
       throw new NotFoundException(getValidatorMessage(EMessageType.WrongCode));
@@ -83,7 +86,7 @@ export class AuthService {
 
   async validateEmailRequest(
     signPayload: IJwtSignPayload,
-  ): Promise<IValidateEmailRequest | undefined> {
+  ): Promise<IApiResponse<IValidateEmailRequest>> {
     const { userId } = signPayload;
     const emailConfirmationCode = bcrypt.hashSync(
       `${userId}${Date.now()}`,
@@ -103,7 +106,9 @@ export class AuthService {
       });
 
       return {
-        success: true,
+        data: {
+          success: true,
+        },
       };
     } else {
       throw new BadRequestException(
@@ -112,7 +117,9 @@ export class AuthService {
     }
   }
 
-  async register(dto: IRegisterRequestDto): Promise<IAuthSuccessResponse> {
+  async register(
+    dto: IRegisterRequestDto,
+  ): Promise<IApiResponse<IAuthSuccessResponse>> {
     const passwordHash = bcrypt.hashSync(dto.password, bcrypt.genSaltSync(10));
     const emailConfirmationCode = bcrypt.hashSync(
       `${dto.email}${Date.now()}`,
@@ -132,9 +139,13 @@ export class AuthService {
         userId: user.id,
       });
 
-      return this.signUser({
+      const data = this.signUser({
         userId: user.id,
       });
+
+      return {
+        data,
+      };
     } else {
       throw new BadRequestException(
         getValidatorMessage(EMessageType.ServerError),
@@ -155,7 +166,7 @@ export class AuthService {
 
   async passwordResetConfirm(
     dto: IPasswordResetConfirmDto,
-  ): Promise<IAuthSuccessResponse> {
+  ): Promise<IApiResponse<IAuthSuccessResponse>> {
     const user = await this.usersService.findByWhere(
       {
         passwordResetCode: dto.code,
@@ -181,7 +192,9 @@ export class AuthService {
       });
 
       return {
-        token: passwordHash,
+        data: {
+          token: passwordHash,
+        },
       };
     } else {
       throw new BadRequestException(
@@ -192,7 +205,7 @@ export class AuthService {
 
   async passwordResetRequest(
     dto: IPasswordResetRequestDto,
-  ): Promise<IRequestPasswordResetRequestResult | undefined> {
+  ): Promise<IApiResponse<IRequestPasswordResetRequestResult>> {
     const passwordResetCode = bcrypt.hashSync(
       `${Date.now()}${dto.email}`,
       bcrypt.genSaltSync(10),
@@ -232,7 +245,9 @@ export class AuthService {
       });
 
       return {
-        success: true,
+        data: {
+          success: true,
+        },
       };
     } else {
       throw new NotFoundException();

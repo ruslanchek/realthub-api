@@ -4,7 +4,8 @@ import {
   IProperty,
   IPropertyImage,
   IPropertyParam,
-} from '../interfaces/common';
+} from './property.interfaces';
+import { IApiResponse } from 'src/interfaces/common';
 
 function times(repeatNumber: number, callback: (index: number) => void): void {
   for (let i = 0; i < repeatNumber; i += 1) {
@@ -63,13 +64,13 @@ const properties = generate<IProperty>(10, propertyIndex => {
 
 @Injectable()
 export class PropertyService {
-  getProperties() {
+  getProperties(): IApiResponse<IProperty[]> {
     return {
       data: properties,
     };
   }
 
-  getProperty(id: string) {
+  getProperty(id: string): IApiResponse<IProperty> {
     return {
       data: getById(id, properties),
     };
