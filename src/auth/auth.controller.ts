@@ -20,10 +20,7 @@ import { IApiRequest } from 'src/interfaces/common';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   async register(@Body() dto: IRegisterRequestDto) {
@@ -33,21 +30,13 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
   async me(@Request() req: IApiRequest) {
-    if (req.user) {
-      return await this.userService.findById(req.user.userId);
-    } else {
-      throw new BadRequestException();
-    }
+    return await this.authService.me(req);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('validate-email/request')
   async validateEmailRequest(@Request() req: IApiRequest) {
-    if (req.user) {
-      return await this.authService.validateEmailRequest(req.user);
-    } else {
-      throw new BadRequestException();
-    }
+    return await this.authService.validateEmailRequest(req);
   }
 
   @Post('validate-email/confirm')

@@ -3,6 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
   MethodNotAllowedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -24,7 +25,8 @@ import {
   IAuthSuccessResponse,
   IRequestPasswordResetRequestResult,
 } from './auth.interfaces';
-import { IApiResponse } from 'src/interfaces/common';
+import { IApiResponse, IApiRequest } from 'src/interfaces/common';
+import { User } from 'src/entries/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -85,9 +87,13 @@ export class AuthService {
   }
 
   async validateEmailRequest(
-    signPayload: IJwtSignPayload,
+    req: IApiRequest,
   ): Promise<IApiResponse<IValidateEmailRequest>> {
-    const { userId } = signPayload;
+    if (!req.user) {
+      throw new ForbiddenException();
+    }
+
+    const { userId } = req.user;
     const emailConfirmationCode = bcrypt.hashSync(
       `${userId}${Date.now()}`,
       bcrypt.genSaltSync(10),
@@ -248,6 +254,22 @@ export class AuthService {
         data: {
           success: true,
         },
+      };
+    } else {
+      throw new NotFoundException();
+    }
+  }
+
+  async me(req: IApiRequest): Promise<IApiResponse<Partial<User>>> {
+    if (!req.user) {
+      throw new ForbiddenException();
+    }
+
+    const user = await this.usersService.findById(req.user.userId);
+
+    if (user) {
+      return {
+        data: user,
       };
     } else {
       throw new NotFoundException();
