@@ -15,7 +15,6 @@ import {
   IConfirmEmailDto,
   IPasswordResetConfirmDto,
 } from './auth.dto';
-import { UserService } from '../user/user.service';
 import { IApiRequest } from 'src/interfaces/common';
 
 @Controller('auth')
