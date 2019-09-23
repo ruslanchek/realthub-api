@@ -40,18 +40,15 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<IJwtSignPayload | undefined> {
-    const user = await this.usersService.findByEmail(email, [
-      'email',
-      'passwordHash',
-    ]);
+    const user = await this.usersService.findByEmail(email, ['passwordHash']);
 
     if (user && bcrypt.compareSync(password, user.passwordHash)) {
       return {
         userId: user.id,
       };
+    } else {
+      return undefined;
     }
-
-    return undefined;
   }
 
   async validateEmailConfirm(
@@ -120,6 +117,22 @@ export class AuthService {
       throw new BadRequestException(
         getValidatorMessage(EMessageType.ServerError),
       );
+    }
+  }
+
+  async login(
+    dto: IRegisterRequestDto,
+  ): Promise<IApiResponse<IAuthSuccessResponse>> {
+    const validatedUser = await this.validateUser(dto.email, dto.password);
+
+    if (validatedUser) {
+      const data = this.signUser(validatedUser);
+
+      return {
+        data,
+      };
+    } else {
+      throw new ForbiddenException();
     }
   }
 

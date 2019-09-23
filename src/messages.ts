@@ -1,5 +1,6 @@
 export enum EMessageType {
   IsEmail,
+  EmptyPassword,
   UserNotFound,
   IsUserAlreadyExists,
   PasswordMinLength,
@@ -12,6 +13,7 @@ export enum EMessageType {
 
 const MESSAGES_MAP: { [key: number]: string } = {
   [EMessageType.IsEmail]: 'NOT_AN_EMAIL',
+  [EMessageType.EmptyPassword]: 'EMPTY_PASSWORD',
   [EMessageType.UserNotFound]: 'USER_NOT_FOUND',
   [EMessageType.IsUserAlreadyExists]: 'USER_EXISTS',
   [EMessageType.PasswordMinLength]: 'PASSWORD_MIN_LENGTH',

@@ -4,9 +4,22 @@ import {
   MinLength,
   MaxLength,
   IsString,
+  IsNotEmpty,
 } from 'class-validator';
 import { IsUserAlreadyExist } from '../user/user.validators';
 import { getValidatorMessage, EMessageType } from '../messages';
+
+export class ILoginRequestDto {
+  @IsEmail(undefined, {
+    message: getValidatorMessage(EMessageType.IsEmail),
+  })
+  email!: string;
+
+  @IsNotEmpty({
+    message: getValidatorMessage(EMessageType.EmptyPassword),
+  })
+  password!: string;
+}
 
 export class IRegisterRequestDto {
   @IsEmail(undefined, {

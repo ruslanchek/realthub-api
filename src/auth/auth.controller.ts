@@ -5,7 +5,6 @@ import {
   Get,
   Request,
   Body,
-  BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -14,6 +13,7 @@ import {
   IPasswordResetRequestDto,
   IConfirmEmailDto,
   IPasswordResetConfirmDto,
+  ILoginRequestDto,
 } from './auth.dto';
 import { IApiRequest } from 'src/interfaces/common';
 
@@ -26,14 +26,19 @@ export class AuthController {
     return await this.authService.register(dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @Post('login')
+  login(@Body() dto: ILoginRequestDto) {
+    return this.authService.login(dto);
+  }
+
   @Get('me')
+  @UseGuards(AuthGuard('jwt'))
   async me(@Request() req: IApiRequest) {
     return await this.authService.me(req);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('validate-email/request')
+  @UseGuards(AuthGuard('jwt'))
   async validateEmailRequest(@Request() req: IApiRequest) {
     return await this.authService.validateEmailRequest(req);
   }
@@ -51,15 +56,5 @@ export class AuthController {
   @Post('password-reset/confirm')
   async passwordResetConfirm(@Body() dto: IPasswordResetConfirmDto) {
     return await this.authService.passwordResetConfirm(dto);
-  }
-
-  @UseGuards(AuthGuard('local'))
-  @Post('login')
-  login(@Request() req: IApiRequest) {
-    if (req.user) {
-      return this.authService.signUser(req.user);
-    } else {
-      throw new BadRequestException();
-    }
   }
 }
