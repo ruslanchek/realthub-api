@@ -10,6 +10,8 @@ export enum EMessageType {
   ServerError,
   WrongCode,
   LoginIncorrect,
+  InvalidUser,
+  InvalidToken,
 }
 
 const MESSAGES_MAP: { [key: number]: string } = {
@@ -24,6 +26,8 @@ const MESSAGES_MAP: { [key: number]: string } = {
   [EMessageType.ServerError]: 'SERVER_ERROR',
   [EMessageType.WrongCode]: 'WRONG_CODE',
   [EMessageType.LoginIncorrect]: 'LOGIN_INCORRECT',
+  [EMessageType.InvalidUser]: 'INVALID_USER',
+  [EMessageType.InvalidToken]: 'INVALID_TOKEN',
 };
 
 export function getValidatorMessage(

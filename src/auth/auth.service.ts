@@ -87,7 +87,9 @@ export class AuthService {
     req: IApiRequest,
   ): Promise<IApiResponse<IValidateEmailRequest>> {
     if (!req.user) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        getValidatorMessage(EMessageType.InvalidToken),
+      );
     }
 
     const { userId } = req.user;
@@ -271,13 +273,17 @@ export class AuthService {
         },
       };
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(
+        getValidatorMessage(EMessageType.InvalidUser),
+      );
     }
   }
 
   async me(req: IApiRequest): Promise<IApiResponse<Partial<User>>> {
     if (!req.user) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        getValidatorMessage(EMessageType.InvalidToken),
+      );
     }
 
     const user = await this.usersService.findById(req.user.userId);
@@ -287,7 +293,9 @@ export class AuthService {
         data: user,
       };
     } else {
-      throw new NotFoundException();
+      throw new NotFoundException(
+        getValidatorMessage(EMessageType.InvalidUser),
+      );
     }
   }
 }
