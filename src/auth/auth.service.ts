@@ -132,7 +132,9 @@ export class AuthService {
         data,
       };
     } else {
-      throw new ForbiddenException();
+      throw new ForbiddenException(
+        getValidatorMessage(EMessageType.LoginIncorrect),
+      );
     }
   }
 

@@ -9,6 +9,7 @@ export enum EMessageType {
   EmailConfirmationCodeNotFound,
   ServerError,
   WrongCode,
+  LoginIncorrect,
 }
 
 const MESSAGES_MAP: { [key: number]: string } = {
@@ -22,6 +23,7 @@ const MESSAGES_MAP: { [key: number]: string } = {
   [EMessageType.EmailConfirmationCodeNotFound]: 'INVALID_CODE',
   [EMessageType.ServerError]: 'SERVER_ERROR',
   [EMessageType.WrongCode]: 'WRONG_CODE',
+  [EMessageType.LoginIncorrect]: 'LOGIN_INCORRECT',
 };
 
 export function getValidatorMessage(
