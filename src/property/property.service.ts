@@ -30,7 +30,7 @@ function getById<T = any>(id: string, array: T[]): T | undefined {
   return array.find(item => (item as any).id === id);
 }
 
-const properties = generate<IProperty>(10, propertyIndex => {
+const properties = generate<IProperty>(1000, propertyIndex => {
   const images = generate<IPropertyImage>(5, imageIndex => {
     return {
       id: faker.random.uuid(),
