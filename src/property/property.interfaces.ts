@@ -23,6 +23,7 @@ export interface IProperty {
   zip: string;
   state: string;
   country: string;
+  sale: number;
   geo: {
     lat: number;
     lng: number;

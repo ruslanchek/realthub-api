@@ -60,6 +60,7 @@ const properties = generate<IProperty>(10, propertyIndex => {
     country: faker.address.country(),
     images,
     params,
+    sale: faker.finance.amount(),
     geo: {
       lat: parseFloat(faker.address.latitude()),
       lng: parseFloat(faker.address.longitude()),
