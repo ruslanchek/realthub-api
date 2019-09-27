@@ -14,7 +14,7 @@ export interface IPropertyParam {
 export interface IProperty {
   id: string;
   title: string;
-  price: string;
+  price: number;
   images: IPropertyImage[];
   params: IPropertyParam[];
   address: string;
@@ -23,7 +23,7 @@ export interface IProperty {
   zip: string;
   state: string;
   country: string;
-  sale: number;
+  sale: number | undefined;
   geo: {
     lat: number;
     lng: number;

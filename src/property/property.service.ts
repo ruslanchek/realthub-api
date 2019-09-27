@@ -51,7 +51,7 @@ const properties = generate<IProperty>(10, propertyIndex => {
   return {
     id: propertyIndex.toString(),
     title: faker.lorem.sentence(),
-    price: faker.finance.amount(),
+    price: parseFloat(faker.finance.amount()),
     address: faker.address.streetAddress(),
     address2: faker.address.secondaryAddress(),
     city: faker.address.city(),
@@ -60,7 +60,9 @@ const properties = generate<IProperty>(10, propertyIndex => {
     country: faker.address.country(),
     images,
     params,
-    sale: faker.finance.amount(),
+    sale: faker.random.boolean()
+      ? parseFloat(faker.finance.amount())
+      : undefined,
     geo: {
       lat: parseFloat(faker.address.latitude()),
       lng: parseFloat(faker.address.longitude()),
