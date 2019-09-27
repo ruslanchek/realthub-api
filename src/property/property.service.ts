@@ -53,6 +53,11 @@ const properties = generate<IProperty>(10, propertyIndex => {
     title: faker.lorem.sentence(),
     price: faker.finance.amount(),
     address: faker.address.streetAddress(),
+    address2: faker.address.secondaryAddress(),
+    city: faker.address.city(),
+    zip: faker.address.zipCode(),
+    state: faker.address.state(),
+    country: faker.address.country(),
     images,
     params,
     geo: {

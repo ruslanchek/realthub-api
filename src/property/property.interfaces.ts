@@ -14,10 +14,15 @@ export interface IPropertyParam {
 export interface IProperty {
   id: string;
   title: string;
-  address: string;
   price: string;
   images: IPropertyImage[];
   params: IPropertyParam[];
+  address: string;
+  address2: string;
+  city: string;
+  zip: string;
+  state: string;
+  country: string;
   geo: {
     lat: number;
     lng: number;
